@@ -39,6 +39,26 @@ public class Projetos {
 
     }
 
+    public void setPublicacoes(Publicacoes publicacoes) {
+        this.publicacoes.add(publicacoes);
+    }
+
+    public String getAgenciaFinanciadora() {
+        return agenciaFinanciadora;
+    }
+
+    public double getValorFinanciado() {
+        return valorFinanciado;
+    }
+
+    public String getObjetivo() {
+        return objetivo;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
     public void setTrocaStatus(boolean trocaStatus) {
         this.trocaStatus = trocaStatus;
     }
@@ -51,13 +71,27 @@ public class Projetos {
         this.status = status;
     }
 
-    
+    public String getStatus() {
+        return status;
+    }
 
-    public void getParticipantesProjeto(ArrayList<Colaboradores> participantes) {
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public String getDataInicio() {
+        return dataInicio;
+    }
+
+    public String getDataTermino() {
+        return dataTermino;
+    }
+
+    public static void getParticipantesProjeto(ArrayList<Colaboradores> participantes) {
 
         System.out.println("Quantidade de participantes do projeto: " + participantes.size() + "\n");
 
-        for(int i = 0;i< participantes.size();i++){
+        for (int i = 0; i < participantes.size(); i++) {
             System.out.println("Colaborador " + (i + 1));
             System.out.println("Nome: " + participantes.get(i).getNome());
             System.out.println("Email: " + participantes.get(i).getEmail());
@@ -75,7 +109,8 @@ public class Projetos {
         int option = Integer.parseInt(teclado.nextLine());
 
         System.out.println("Título: " + projetos.get(option - 1).titulo);
-        System.out.println("Data de início: " + projetos.get(option - 1).dataInicio + " até " + "data de término: " + projetos.get(option - 1).dataTermino);
+        System.out.println("Data de início: " + projetos.get(option - 1).dataInicio + " até " + "data de término: "
+                + projetos.get(option - 1).dataTermino);
         System.out.println("Agência financiadora: " + projetos.get(option - 1).agenciaFinanciadora);
         System.out.println("Valor financiado: " + projetos.get(option - 1).valorFinanciado);
         System.out.println("Descrição: " + projetos.get(option - 1).descricao);
@@ -113,11 +148,22 @@ public class Projetos {
             projetoAtual.participantes.add(professor);
             projetoAtual.setTrocaStatus(true);
 
-            System.out.println("Professor '" + professor.getNome() + "' alocado com sucesso para o projeto '" + projetoAtual.titulo + "'.");
-
+            System.out.println("Professor '" + professor.getNome() + "' alocado com sucesso para o projeto '"
+                    + projetoAtual.titulo + "'.");
 
         }
 
+    }
+
+    public static boolean tituloDisponivel(String titulo) {
+
+        for (int i = 0; i < projetos.size(); i++) {
+            if (projetos.get(i).titulo.equalsIgnoreCase(titulo)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public static void adicionarProjeto(LaboratorioPesquisa laboratorio) {
@@ -125,6 +171,11 @@ public class Projetos {
 
         System.out.print("Título do projeto: ");
         String titulo = teclado.nextLine();
+
+        while (!tituloDisponivel(titulo)) {
+            System.out.println("Título indisponível. Digite outro: ");
+            titulo = teclado.nextLine();
+        }
 
         System.out.print("Data de início, digite no formato 'dd/mm/yyyy': ");
         String dataInicio = teclado.nextLine();
@@ -144,7 +195,8 @@ public class Projetos {
         System.out.println("Descrição do projeto: ");
         String descricao = teclado.nextLine();
 
-        Projetos novoProjeto = new Projetos(titulo, dataInicio, dataTermino, agenciaFinanciadora, valorFinanciado, objetivo, descricao);
+        Projetos novoProjeto = new Projetos(titulo, dataInicio, dataTermino, agenciaFinanciadora, valorFinanciado,
+                objetivo, descricao);
 
         projetos.add(novoProjeto);
 
@@ -154,8 +206,12 @@ public class Projetos {
 
     }
 
+    public static void alocarColaborador(LaboratorioPesquisa lab) {
+        if(projetos.size() == 0){
+            System.out.println("Não há projetos disponíveis.");
+            return;
+        } 
 
-    public static void alocarColaborador(LaboratorioPesquisa lab){
         lab.getColaboradoresAlocamento();
 
         System.out.println("Escolha o indice do colaborador que deseja alocar a um projeto: ");
@@ -171,20 +227,24 @@ public class Projetos {
         Projetos projeto = projetos.get(optionProjeto - 1);
 
         projeto.participantes.add(colaborador);
+        colaborador.addProjetosColaboradores(projeto);
 
-        if(colaborador.getTipoColaborador() == "Professor") projeto.setTrocaStatus(true);
+        System.out.println("Quantidade projetos : " + colaborador.getProjetos().size() + " " + colaborador.getNome() + " " + colaborador.getProjetos().get(0).titulo);
         
+
+        if (colaborador.getTipoColaborador() == "Professor") projeto.setTrocaStatus(true);
+
     }
 
     public static void listaProjetos() {
-        for(int i = 0;i < projetos.size();i++){
+        for (int i = 0; i < projetos.size(); i++) {
             System.out.println("Projeto " + (i + 1));
             System.out.println("Título: " + projetos.get(i).titulo);
             System.out.println("Status: " + projetos.get(i).status);
         }
     }
 
-    public static void alterarStatusProjeto(){
+    public static void alterarStatusProjeto() {
         listaProjetos();
         System.out.println("Escolha pelo indice qual projeto deseja alterar o status: ");
         int optionProjeto = Integer.parseInt(teclado.nextLine());
@@ -196,7 +256,7 @@ public class Projetos {
 
         int option = Integer.parseInt(teclado.nextLine());
 
-        if(option == 1 && projeto.trocaStatus){
+        if (option == 1 && projeto.trocaStatus) {
             projeto.setStatus("Em andamento");
             System.out.println("Projeto " + projeto.titulo + ": status trocado para 'Em andamento'.");
             return;
@@ -204,15 +264,72 @@ public class Projetos {
             System.out.println("O projeto deve ter ao menos um professor para ter seu status trocado.");
         }
 
-        if(option == 2 && projeto.publicacoes.size() != 0){
+        if (option == 2 && projeto.publicacoes.size() != 0 && projeto.trocaStatus) {
             projeto.setStatus("Concluído");
         } else {
             System.out.println("O projeto deve ter ao menos uma publicação para ser publicado");
         }
     }
 
-    public static void buscarProjeto(){
-        System.out.println("Digite o título do projeto que deseja.");
+    public void buscarProjeto() {
+        System.out.println("Digite o título do projeto que deseja consultar.");
+
+        String tituloProcurado = teclado.nextLine();
+        int indexProjeto = -1;
+
+        for (int i = 0; i < projetos.size(); i++) {
+            if (projetos.get(i).titulo.equalsIgnoreCase(tituloProcurado)) {
+                indexProjeto = i;
+            }
+        }
+
+        if (indexProjeto == -1) {
+            System.out.println("Não existe nenhum projeto com o titulo '" + tituloProcurado + "'.");
+            return;
+        }
+
+        System.out.println("Título: " + projetos.get(indexProjeto).titulo);
+        System.out.println("Data de início: " + projetos.get(indexProjeto).dataInicio + " até " + "data de término: " + projetos.get(indexProjeto).dataTermino);
+        System.out.println("Agência financiadora: " + projetos.get(indexProjeto).agenciaFinanciadora);
+        System.out.println("Valor financiado: " + projetos.get(indexProjeto).valorFinanciado);
+        System.out.println("Descrição: " + projetos.get(indexProjeto).descricao);
+        System.out.println("Objetivo: " + projetos.get(indexProjeto).objetivo);
+        System.out.println("Status do projeto: " + projetos.get(indexProjeto).status + "\n");
+
+        ArrayList<Colaboradores> participantesProjetoAtual = projetos.get(indexProjeto).participantes;
+
+        getParticipantesProjeto(participantesProjetoAtual);
+
+        mostraPublicacoesProjeto(projetos.get(indexProjeto));
         
+
     }
+
+    public void mostraPublicacoesProjeto(Projetos projeto){
+        ArrayList<Publicacoes> publicacoes = projeto.publicacoes;
+
+        if(publicacoes.isEmpty()){
+            System.out.println("Não há publicações associadas a esse projeto");
+            return;
+        }
+
+        System.out.println("Publicações do projeto '" + projeto.titulo + "'");
+
+        for(int i = 0;i < publicacoes.size();i++){
+            System.out.println("Publicação " + (i + 1));
+            ArrayList<Colaboradores> autores = publicacoes.get(i).getAutores();
+
+            System.out.println("Autor(es) da publicação: ");
+            for(int j = 0;j < autores.size();j++){
+                System.out.println("Autor " + (j + 1));
+                System.out.println("Nome: " + autores.get(j).getNome());
+                System.out.println("Tipo de colaborador: " + autores.get(j).getTipoColaborador() + '\n');
+            }
+
+            System.out.println("Título: " + publicacoes.get(i).getTitulo());
+            System.out.println("Nome da conferência: " + publicacoes.get(i).getNomeConferencia());
+            System.out.println("Ano de publicação: " + publicacoes.get(i).getAnoPublicacao() + '\n');
+        }
+    }
+
 }

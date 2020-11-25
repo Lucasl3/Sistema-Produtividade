@@ -1,5 +1,6 @@
 package Project_Software.src;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import Project_Software.src.Colaboradores.Colaboradores;
@@ -12,6 +13,8 @@ public class Administrador {
         String nomeLaboratorio = teclado.nextLine();
 
         LaboratorioPesquisa laboratorio = new LaboratorioPesquisa(nomeLaboratorio);
+        Colaboradores colaboradores = new Colaboradores();
+        Publicacoes publicacoes = new Publicacoes();
 
         boolean loop = true;
         
@@ -21,14 +24,16 @@ public class Administrador {
             System.out.println("[2] - Criar novo projeto.");
             System.out.println("[3] - Alocar colaborador a uma projeto.");
             System.out.println("[4] - Alterar status de um projeto.");
-            System.out.println("[5] - Consultar projeto.");
+            System.out.println("[5] - Consultar projeto pelo titulo.");
+            System.out.println("[6] - Consultar colaborador pelo nome.");
+            System.out.println("[7] - Adicionar publicação.");
+            System.out.println("[8] - Adicionar orientação");
             System.out.println("[0] - Sair.");
 
             int option = Integer.parseInt(teclado.nextLine());
 
             switch(option){
                 case 1:
-                    Colaboradores colaboradores = new Colaboradores();
                     laboratorio.adicionarColaborador(colaboradores.adicionarColaborador());
                     break;
                 case 2:
@@ -41,7 +46,17 @@ public class Administrador {
                     Projetos.alterarStatusProjeto();
                     break;
                 case 5:
-
+                    Projetos projeto = new Projetos();
+                    projeto.buscarProjeto();
+                    break;
+                case 6:
+                    colaboradores.buscarColaborador();
+                    break;
+                case 7:
+                    publicacoes.adicionarPublicacao(laboratorio);
+                    break;
+                case 8:
+                    
                     break;
                 default:
                     loop = false;
@@ -49,9 +64,9 @@ public class Administrador {
             }
         }
 
-        // laboratorio.getColaboradores();
-        Projetos p = new Projetos();
-        p.listaDadosProjeto();
+        laboratorio.todasPublicacoes();
+        // Projetos p = new Projetos();
+        // p.listaDadosProjeto();
 
     }
 }

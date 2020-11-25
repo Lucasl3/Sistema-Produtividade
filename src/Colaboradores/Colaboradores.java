@@ -4,14 +4,21 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import Project_Software.src.LaboratorioPesquisa;
-import Sistema_de_Produtividade_Academica.Sistema_de_Produtividade_Academica.src.Laboratorio;
+import Project_Software.src.Projetos;
+import Project_Software.src.Publicacoes;
 
 public class Colaboradores{
     private String nome;
     private String email;
     private String tipoColaborador;
+    private ArrayList<Projetos> projetos = new ArrayList<Projetos>();
+    private ArrayList<Publicacoes> publicacoes = new ArrayList<Publicacoes>();
 
     Scanner teclado = new Scanner(System.in);
+
+    public void setPublicacoes(Publicacoes publicacao) {
+        this.publicacoes.add(publicacao);
+    }
 
     public String getNome() {
         return nome;
@@ -25,7 +32,13 @@ public class Colaboradores{
         return tipoColaborador;
     }
 
-    
+    public  ArrayList<Projetos> getProjetos() {
+        return projetos;
+    }
+    public void addProjetosColaboradores(Projetos projeto) {
+        this.projetos.add(projeto);
+    }
+
     public void setNome(String nome, Colaboradores colaborador) {
         colaborador.nome = nome;
     }
@@ -38,11 +51,26 @@ public class Colaboradores{
         colaborador.tipoColaborador = tipoColaborador;
     }
 
+    public boolean nomeDisponivel(String nome){
+        ArrayList<Colaboradores> colaboradores = LaboratorioPesquisa.colaboradores;
+        for(int i = 0;i < colaboradores.size();i++){
+            if(colaboradores.get(i).nome.equalsIgnoreCase(nome)){
+                return false;
+            }
+        }
+        return true;
+    }
+
     //Pega os dados nome e email ao fazer o cadastro do colaborador
     private void dadosColaborador(Colaboradores colaborador){
 
         System.out.print("Digite o nome do colaborador: ");
         String nome = teclado.nextLine();
+
+        while (!nomeDisponivel(nome)) {
+            System.out.print("Nome indisponível. Digite outro: ");
+            nome = teclado.nextLine();
+        }
         System.out.println();
 
         System.out.print("Digite o email do colaborador: ");
@@ -92,6 +120,86 @@ public class Colaboradores{
         }
 
 
+    }
+
+    public void buscarColaborador(){
+        System.out.print("Digite o nome do colaborador que deseja os dados: ");
+        ArrayList<Colaboradores> colaboradores = LaboratorioPesquisa.colaboradores;
+        String nomeProcurado = teclado.nextLine();
+        int index = -1;
+
+        for(int i = 0;i<colaboradores.size();i++){
+            if(colaboradores.get(i).nome.equalsIgnoreCase(nomeProcurado)){
+                index = i;
+            }
+        }
+        System.out.println();
+        if(index == -1){
+            System.out.println("Não existe colaborador com esse nome");
+            return;
+        }
+
+        Colaboradores colaboradorProcurado = colaboradores.get(index);
+
+        System.out.println("Nome: " + colaboradorProcurado.nome);
+        System.out.println("Email: " + colaboradorProcurado.email);
+
+        ArrayList<Projetos> projetosColaboradorAtual = colaboradorProcurado.projetos;
+        System.out.println(projetosColaboradorAtual.size());
+
+        if(projetosColaboradorAtual.isEmpty()){
+            System.out.println(colaboradorProcurado.nome + " não está em nenhum projeto");
+        } else {
+            int j = 1;
+            for(int i = 0;i < projetosColaboradorAtual.size();i++){
+                if(projetosColaboradorAtual.get(i).getStatus() != "Em elaboração"){
+                    System.out.println("Projeto " + j);
+                    System.out.println("Título: " + projetosColaboradorAtual.get(i).getTitulo());
+                    System.out.println("Data início: " + projetosColaboradorAtual.get(i).getDataInicio());
+                    System.out.println("Data término: " + projetosColaboradorAtual.get(i).getDataTermino());
+                    System.out.println("Status do projeto: " + projetosColaboradorAtual.get(i).getStatus() + "\n");
+                    j++;
+
+                }
+
+            }
+        }
+
+
+        if(!colaboradorProcurado.publicacoes.isEmpty()){
+            System.out.println("Publicações: ");
+            for(int i = 0;i < colaboradorProcurado.publicacoes.size();i++){
+                System.out.println("Publicação " + (i + 1));
+                
+                ArrayList<Colaboradores> autores = colaboradorProcurado.publicacoes.get(i).getAutores();
+
+                for(int j = 0;j < autores.size();j++){
+                    System.out.println("Autor " + (j + 1));
+                    System.out.println("Nome: " + autores.get(j).getNome());
+                    System.out.println("Tipo de colaborador: " + autores.get(j).getTipoColaborador() + '\n');
+                }
+    
+                System.out.println("Título: " + colaboradorProcurado.publicacoes.get(i).getTitulo());
+                System.out.println("Nome da conferência: " + colaboradorProcurado.publicacoes.get(i).getNomeConferencia());
+                System.out.println("Ano de publicação: " + colaboradorProcurado.publicacoes.get(i).getAnoPublicacao() + '\n');
+
+                if(colaboradorProcurado.publicacoes.get(i).getProjeto() != null){
+                    System.out.println("\nProjeto associado: ");
+    
+                    System.out.println("Título: " + colaboradorProcurado.publicacoes.get(i).getProjeto().getTitulo());
+                    System.out.println("Data de início: " + colaboradorProcurado.publicacoes.get(i).getProjeto().getDataInicio() + " até " + "data de término: " + colaboradorProcurado.publicacoes.get(i).getProjeto().getDataTermino());
+                    System.out.println("Agência financiadora: " + colaboradorProcurado.publicacoes.get(i).getProjeto().getAgenciaFinanciadora());
+                    System.out.println("Valor financiado: " + colaboradorProcurado.publicacoes.get(i).getProjeto().getValorFinanciado());
+                    System.out.println("Descrição: " + colaboradorProcurado.publicacoes.get(i).getProjeto().getDescricao());
+                    System.out.println("Objetivo: " + colaboradorProcurado.publicacoes.get(i).getProjeto().getObjetivo());
+                    System.out.println("Status do projeto: " + colaboradorProcurado.publicacoes.get(i).getProjeto().getStatus() + "\n");
+    
+                }
+            }
+
+        } else{
+            System.out.println("Esse colaborador não possui publicações");
+        }
     }
 
 }
