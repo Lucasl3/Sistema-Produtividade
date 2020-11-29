@@ -3,15 +3,15 @@ package Project_Software.src;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import Aula.index;
 import Project_Software.src.Colaboradores.Colaboradores;
 
 public class Publicacoes {
     private String titulo;
     private String nomeConferencia;
-    private String anoPublicacao;
+    private int anoPublicacao;
     private ArrayList<Colaboradores> autores = new ArrayList<Colaboradores>();
     private Projetos projeto = null;
+    private static int numeroPublicacoes = 0;
 
     Scanner teclado = new Scanner(System.in);
 
@@ -19,19 +19,23 @@ public class Publicacoes {
 
     }
 
-    public Publicacoes(String titulo, String nomeConferencia, String anoPublicacao, ArrayList<Colaboradores> autores){
+    public Publicacoes(String titulo, String nomeConferencia, int anoPublicacao, ArrayList<Colaboradores> autores){
         this.titulo = titulo;
         this.nomeConferencia = nomeConferencia;
         this.anoPublicacao = anoPublicacao;
         this.autores = autores;
     }
 
-    public Publicacoes(String titulo, String nomeConferencia, String anoPublicacao, ArrayList<Colaboradores> autores, Projetos projeto){
+    public Publicacoes(String titulo, String nomeConferencia, int anoPublicacao, ArrayList<Colaboradores> autores, Projetos projeto){
         this.titulo = titulo;
         this.nomeConferencia = nomeConferencia;
         this.anoPublicacao = anoPublicacao;
         this.autores = autores;
         this.projeto = projeto;
+    }
+
+    public static int getNumeroPublicacoes() {
+        return numeroPublicacoes;
     }
 
     public Projetos getProjeto() {
@@ -46,7 +50,7 @@ public class Publicacoes {
         return nomeConferencia;
     }
 
-    public String getAnoPublicacao() {
+    public int getAnoPublicacao() {
         return anoPublicacao;
     }
 
@@ -92,8 +96,8 @@ public class Publicacoes {
         System.out.print("Digite o nome da conferência onde foi publicada: ");
         String nomeConferencia = teclado.nextLine();
 
-        System.out.println("Digite o ano da publicação: ");
-        String anoPublicacao = teclado.nextLine();
+        System.out.print("Digite o ano da publicação: ");
+        int anoPublicacao = Integer.parseInt(teclado.nextLine());
 
         Publicacoes publicacao;
         
@@ -117,6 +121,7 @@ public class Publicacoes {
                         publicacao = new Publicacoes(titulo, nomeConferencia, anoPublicacao, autores, Projetos.projetos.get(index));
                         publicacoesColaboradores(autores, publicacao);
                         Projetos.projetos.get(index).setPublicacoes(publicacao);
+                        numeroPublicacoes++;
                         return publicacao;
 
                     }
@@ -126,19 +131,22 @@ public class Publicacoes {
             }
             
         }
+
+        numeroPublicacoes++;
         publicacao = new Publicacoes(titulo, nomeConferencia, anoPublicacao, autores);
         publicacoesColaboradores(autores, publicacao);
         return publicacao;
-
-
+        
+        
     }
-
+    
     public void adicionarPublicacao(LaboratorioPesquisa lab){
         if(lab.getColaboradores().isEmpty()){
             System.out.println("Você precisa de ao menos um colaborador no laboratória para adicionar uma publicação.");
             return;
         } 
         lab.setPublicacoes(dadosPublicacao(lab));
+        System.out.println("Publicação feita com sucesso.\n");
 
 
     }

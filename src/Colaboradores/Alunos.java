@@ -1,8 +1,11 @@
 package Project_Software.src.Colaboradores;
 
+import Project_Software.src.Orientacoes;
+
+import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Alunos extends Colaboradores {
+public class Alunos extends Colaboradores { 
     public String tipo;
 
     static Scanner teclado = new Scanner(System.in);

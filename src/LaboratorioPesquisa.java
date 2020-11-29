@@ -7,15 +7,49 @@ import java.util.ArrayList;
 public class LaboratorioPesquisa {
     private String nomeLaboratorio;
     private ArrayList<Publicacoes> publicacoes = new ArrayList<Publicacoes>();
-    private ArrayList<Orientacoes> orientacoes = new ArrayList<Orientacoes>();
+    public static ArrayList<Orientacoes> orientacoes = new ArrayList<Orientacoes>();
     public static ArrayList<Colaboradores> colaboradores = new ArrayList<Colaboradores>();
 
     public ArrayList<Colaboradores> getColaboradores() {
         return colaboradores;
     }
 
-    public void setPublicacoes(Publicacoes publicacoes) {
-        this.publicacoes.add(publicacoes);
+    public void listaOrientacoes(){
+        for(int i = 0;i < orientacoes.size();i++){
+            System.out.println("Orientação " + (i + 1));
+            System.out.println("Orientador: " + orientacoes.get(i).getProfessor().getNome());
+            System.out.println("Aluno orientado: " + orientacoes.get(i).getAluno().getNome() + "\n");
+        }
+    }
+
+    public void setOrientacoes(Orientacoes orientacao) {
+        orientacoes.add(orientacao);
+    }
+
+    public void relatorioProducaoAcademica(){
+        System.out.println("Número de colaboradores: " + Colaboradores.getNumeroColaboradores());
+        System.out.println("Número de projetos em elaboração: " + Projetos.getNumeroProjetosElaboracao());
+        System.out.println("Número de projetos em andamento: " + Projetos.getNumeroProjetosAndamento());
+        System.out.println("Número de projetos concluídos: " + Projetos.getNumeroProjetosConcluido());
+        System.out.println("Número total de projetos: " + Projetos.getNumeroProjetos());
+        System.out.println("Número de publicações: " + Publicacoes.getNumeroPublicacoes());
+        System.out.println("Número de orientações: " + Orientacoes.getNumeroOrientacoes());
+    }
+
+    public void setPublicacoes(Publicacoes publicacao) {
+        
+        if(publicacoes.isEmpty()){
+            this.publicacoes.add(publicacao);
+        } else{
+            for(int i = 0;i < publicacoes.size();i++){
+                if(publicacao.getAnoPublicacao() > publicacoes.get(i).getAnoPublicacao()){
+                    this.publicacoes.add(i, publicacao);
+                    return;
+                }
+            }
+            this.publicacoes.add(publicacao);
+        }
+
     }
 
     public ArrayList<Publicacoes> getPublicacoes() {

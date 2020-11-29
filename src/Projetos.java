@@ -21,6 +21,11 @@ public class Projetos {
     private ArrayList<Colaboradores> participantes = new ArrayList<Colaboradores>();
     private ArrayList<Publicacoes> publicacoes = new ArrayList<Publicacoes>();
     static ArrayList<Projetos> projetos = new ArrayList<Projetos>();
+    private static int numeroProjetosElaboracao = 0;
+    private static int numeroProjetosAndamento = 0;
+    private static int numeroProjetosConcluido = 0;
+    private static int numeroProjetos = 0;
+
 
     static Scanner teclado = new Scanner(System.in);
 
@@ -37,6 +42,26 @@ public class Projetos {
 
     public Projetos() {
 
+    }
+
+    public ArrayList<Colaboradores> getParticipantes() {
+        return participantes;
+    }
+
+    public static int getNumeroProjetos() {
+        return numeroProjetos;
+    }
+
+    public static int getNumeroProjetosAndamento() {
+        return numeroProjetosAndamento;
+    }
+
+    public static int getNumeroProjetosConcluido() {
+        return numeroProjetosConcluido;
+    }
+
+    public static int getNumeroProjetosElaboracao() {
+        return numeroProjetosElaboracao;
     }
 
     public void setPublicacoes(Publicacoes publicacoes) {
@@ -122,7 +147,7 @@ public class Projetos {
         getParticipantesProjeto(participantesProjetoAtual);
     }
 
-    public static void listaProfessoresLaboratorio(LaboratorioPesquisa lab) {
+    public static void listaProfessoresLaboratorio(LaboratorioPesquisa lab, Projetos projetoAtual) {
         ArrayList<Colaboradores> professores = lab.getProfessores();
 
         System.out.println("O projeto precisa de ao menos um professor como participante.");
@@ -143,9 +168,8 @@ public class Projetos {
 
             int option = Integer.parseInt(teclado.nextLine()) - 1;
             Colaboradores professor = professores.get(option);
-            int indexProjeto = projetos.size() - 1;
-            Projetos projetoAtual = projetos.get(indexProjeto);
             projetoAtual.participantes.add(professor);
+            professor.addProjetosColaboradores(projetoAtual);
             projetoAtual.setTrocaStatus(true);
 
             System.out.println("Professor '" + professor.getNome() + "' alocado com sucesso para o projeto '"
@@ -198,11 +222,33 @@ public class Projetos {
         Projetos novoProjeto = new Projetos(titulo, dataInicio, dataTermino, agenciaFinanciadora, valorFinanciado,
                 objetivo, descricao);
 
-        projetos.add(novoProjeto);
+        String[] data = novoProjeto.dataTermino.split("/");
+        int ano = Integer.parseInt(data[2]);
+        
+        if(projetos.isEmpty()){
+            projetos.add(novoProjeto);
+        } else{
+            for(int i=0;i<projetos.size();i++){
+                String[] dataAtual = projetos.get(i).dataTermino.split("/");
+                int anoAtual = Integer.parseInt(dataAtual[2]);
 
+                if(ano > anoAtual){
+                    numeroProjetos++;
+                    numeroProjetosElaboracao++;
+                    System.out.println("Projeto criado com sucesso!\n");
+                    projetos.add(i, novoProjeto);
+                    listaProfessoresLaboratorio(laboratorio, novoProjeto);
+                    return;
+                }
+            }
+            projetos.add(novoProjeto);
+        }
+
+        numeroProjetos++;
+        numeroProjetosElaboracao++;
         System.out.println("Projeto criado com sucesso!\n");
 
-        listaProfessoresLaboratorio(laboratorio);
+        listaProfessoresLaboratorio(laboratorio, novoProjeto);
 
     }
 
@@ -210,7 +256,10 @@ public class Projetos {
         if(projetos.size() == 0){
             System.out.println("Não há projetos disponíveis.");
             return;
-        } 
+        } else if(lab.getColaboradores().isEmpty()){
+            System.out.println("Não há colaboradores disponíveis.");
+            return;
+        }
 
         lab.getColaboradoresAlocamento();
 
@@ -219,20 +268,48 @@ public class Projetos {
         int option = Integer.parseInt(teclado.nextLine());
         Colaboradores colaborador = lab.getColaboradores().get(option - 1);
 
-        System.out.println("Escolha o projeto que deseja alocar " + colaborador.getNome());
         listaProjetos();
 
-        int optionProjeto = Integer.parseInt(teclado.nextLine());
+        String tituloProcurado;
+        int indexProjeto = -1;
 
-        Projetos projeto = projetos.get(optionProjeto - 1);
+        while(indexProjeto == -1){
+            System.out.println("Digite o título do projeto que deseja associar " + colaborador.getNome());
+            tituloProcurado = teclado.nextLine();
 
+            for (int i = 0; i < projetos.size(); i++) {
+                if (projetos.get(i).titulo.equalsIgnoreCase(tituloProcurado)) {
+                    indexProjeto = i;
+                }
+            }
+            if(indexProjeto == -1){
+                System.out.println("Projeto inexistente");
+            }
+        }
+
+        
+        Projetos projeto = projetos.get(indexProjeto);
+        
+        System.out.println("1: " + colaborador.getTipoColaborador());
+        System.out.println("2: " + colaborador.getNumeroProjetosAndamento());
+        System.out.println("3: " + projeto.getStatus());
+
+        if(colaborador.getTipoColaborador().equals("Aluno de graduação") && colaborador.getNumeroProjetosAndamento() == 2 && projeto.getStatus().equals("Em andamento")){
+            System.out.println("Esse aluno não pode ser alocado a mais um projeto em andamento. Esse aluno só pode participar de 2 projetos em andamento.");
+            return;
+        }
+
+        if(projeto.getStatus().equals("Em andamento")){
+            colaborador.setNumeroProjetosAndamento(1);
+        }
+        
         projeto.participantes.add(colaborador);
         colaborador.addProjetosColaboradores(projeto);
 
-        System.out.println("Quantidade projetos : " + colaborador.getProjetos().size() + " " + colaborador.getNome() + " " + colaborador.getProjetos().get(0).titulo);
-        
+        System.out.println(colaborador.getNome() + " foi alocado para o projeto " + projeto.titulo);        
 
         if (colaborador.getTipoColaborador() == "Professor") projeto.setTrocaStatus(true);
+        
 
     }
 
@@ -246,10 +323,24 @@ public class Projetos {
 
     public static void alterarStatusProjeto() {
         listaProjetos();
-        System.out.println("Escolha pelo indice qual projeto deseja alterar o status: ");
-        int optionProjeto = Integer.parseInt(teclado.nextLine());
 
-        Projetos projeto = projetos.get(optionProjeto - 1);
+        System.out.println("Digite o título do projeto que deseja alterar o status ");
+
+        String tituloProcurado = teclado.nextLine();
+        int indexProjeto = -1;
+
+        while(indexProjeto == -1){
+            for (int i = 0; i < projetos.size(); i++) {
+                if (projetos.get(i).titulo.equalsIgnoreCase(tituloProcurado)) {
+                    indexProjeto = i;
+                }
+            }
+            if(indexProjeto == -1){
+                System.out.println("Projeto inexistente");
+            }
+        }
+
+        Projetos projeto = projetos.get(indexProjeto);
 
         System.out.println("[1] Alterar status para 'Em andamento'.");
         System.out.println("[2] Alterar status para 'Concluído'.");
@@ -257,17 +348,60 @@ public class Projetos {
         int option = Integer.parseInt(teclado.nextLine());
 
         if (option == 1 && projeto.trocaStatus) {
-            projeto.setStatus("Em andamento");
-            System.out.println("Projeto " + projeto.titulo + ": status trocado para 'Em andamento'.");
+            if(alunoGraduacaoValido(projeto)) {
+                numeroProjetosElaboracao--;
+                numeroProjetosAndamento++;
+                projeto.setStatus("Em andamento");
+                System.out.println("Projeto " + projeto.titulo + ": status trocado para 'Em andamento'.");
+            } else {
+                System.out.println("Não é possível fazer a troca do status. Há aluno(s) de graduação em 2 projetos em andamento.");
+            }
             return;
-        } else {
+        } else if (option == 1 && !projeto.trocaStatus) {
             System.out.println("O projeto deve ter ao menos um professor para ter seu status trocado.");
         }
 
         if (option == 2 && projeto.publicacoes.size() != 0 && projeto.trocaStatus) {
+            numeroProjetosAndamento--;
+            numeroProjetosConcluido++;
+            casoAlunoGraduacao(projeto);
             projeto.setStatus("Concluído");
+            System.out.println("Projeto " + projeto.titulo + ": status trocado para '" + projeto.getStatus() + "'.");
+        } else if (option == 2 && projeto.publicacoes.size() == 0 && projeto.trocaStatus) {
+            System.out
+                    .println("O projeto deve ter ao menos uma publicação para ter seu status alterado para concluído");
+        }
+    }
+
+    public static void casoAlunoGraduacao(Projetos projeto) {
+        ArrayList<Colaboradores> participantes = projeto.participantes;
+
+        for(int i = 0;i < participantes.size();i++){
+            if(participantes.get(i).getTipoColaborador().equals("Aluno de graduação")){
+                participantes.get(i).setNumeroProjetosAndamento(-1);
+            }
+        }
+
+    }
+
+    public static boolean alunoGraduacaoValido(Projetos projeto) {
+        int flag = 0;
+
+        for(int i = 0;i < projeto.getParticipantes().size();i++){
+            Colaboradores participante = projeto.getParticipantes().get(i);
+            if(participante.getTipoColaborador().equals("Aluno de graduação")){
+                if(participante.getNumeroProjetosAndamento() < 2){
+                    participante.setNumeroProjetosAndamento(1);
+                } else {
+                    flag = 1;
+                }
+            }
+        }
+
+        if(flag == 0){
+            return true;
         } else {
-            System.out.println("O projeto deve ter ao menos uma publicação para ser publicado");
+            return false;
         }
     }
 

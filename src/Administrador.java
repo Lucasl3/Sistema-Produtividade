@@ -28,6 +28,7 @@ public class Administrador {
             System.out.println("[6] - Consultar colaborador pelo nome.");
             System.out.println("[7] - Adicionar publicação.");
             System.out.println("[8] - Adicionar orientação");
+            System.out.println("[9] - Relatório de produção acadêmica do laboratório");
             System.out.println("[0] - Sair.");
 
             int option = Integer.parseInt(teclado.nextLine());
@@ -56,7 +57,11 @@ public class Administrador {
                     publicacoes.adicionarPublicacao(laboratorio);
                     break;
                 case 8:
-                    
+                    Orientacoes orientacao = new Orientacoes();
+                    orientacao.adicionarOrientacao();
+                    break;
+                case 9:
+                    laboratorio.relatorioProducaoAcademica();
                     break;
                 default:
                     loop = false;
@@ -64,7 +69,7 @@ public class Administrador {
             }
         }
 
-        laboratorio.todasPublicacoes();
+        // laboratorio.todasPublicacoes();
         // Projetos p = new Projetos();
         // p.listaDadosProjeto();
 

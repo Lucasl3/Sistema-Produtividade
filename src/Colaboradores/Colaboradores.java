@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import Project_Software.src.LaboratorioPesquisa;
+import Project_Software.src.Orientacoes;
 import Project_Software.src.Projetos;
 import Project_Software.src.Publicacoes;
 
@@ -13,11 +14,37 @@ public class Colaboradores{
     private String tipoColaborador;
     private ArrayList<Projetos> projetos = new ArrayList<Projetos>();
     private ArrayList<Publicacoes> publicacoes = new ArrayList<Publicacoes>();
+    private static int numeroColaboradores = 0;
+    private int numeroProjetosAndamento = 0;
 
     Scanner teclado = new Scanner(System.in);
 
     public void setPublicacoes(Publicacoes publicacao) {
-        this.publicacoes.add(publicacao);
+        
+        if(publicacoes.isEmpty()){
+            this.publicacoes.add(publicacao);
+        } else{
+            for(int i = 0;i < publicacoes.size();i++){
+                if(publicacao.getAnoPublicacao() > publicacoes.get(i).getAnoPublicacao()){
+                    System.out.println("entrou");
+                    this.publicacoes.add(i, publicacao);
+                    return;
+                }
+            }
+            this.publicacoes.add(publicacao);
+        }
+    }
+
+    public static int getNumeroColaboradores() {
+        return numeroColaboradores;
+    }
+
+    public int getNumeroProjetosAndamento() {
+        return numeroProjetosAndamento;
+    }
+
+    public void setNumeroProjetosAndamento(int numeroProjetosAndamento) {
+        this.numeroProjetosAndamento += numeroProjetosAndamento;
     }
 
     public String getNome() {
@@ -101,19 +128,24 @@ public class Colaboradores{
                 // laboratorio.adicionarColaborador(aluno);
                 tipo = "Aluno de " + aluno.getTipo();
                 setTipoColaborador(tipo, aluno);
+                Orientacoes.incrementaNumeroAlunos();
                 System.out.println(tipo + " inserido com sucesso!");
+                numeroColaboradores++;
                 return aluno;
             case 2:
                 Professores professor = new Professores();
                 dadosColaborador(professor);
                 setTipoColaborador("Professor", professor);
+                Orientacoes.incrementaNumeroProfessores();
                 System.out.println("Professor inserido com sucesso!");
+                numeroColaboradores++;
                 return professor;
             case 3:
                 Pesquisadores pesquisador = new Pesquisadores();
                 dadosColaborador(pesquisador);
                 setTipoColaborador("Pesquisador", pesquisador);
                 System.out.println("Pesquisador inserido com sucesso!");
+                numeroColaboradores++;
                 return pesquisador;
             default:
                 return null;
@@ -143,12 +175,12 @@ public class Colaboradores{
 
         System.out.println("Nome: " + colaboradorProcurado.nome);
         System.out.println("Email: " + colaboradorProcurado.email);
+        System.out.println("Tipo de colaborador: " + colaboradorProcurado.tipoColaborador + "\n");
 
         ArrayList<Projetos> projetosColaboradorAtual = colaboradorProcurado.projetos;
-        System.out.println(projetosColaboradorAtual.size());
 
         if(projetosColaboradorAtual.isEmpty()){
-            System.out.println(colaboradorProcurado.nome + " não está em nenhum projeto");
+            System.out.println(colaboradorProcurado.nome + " não está em nenhum projeto\n");
         } else {
             int j = 1;
             for(int i = 0;i < projetosColaboradorAtual.size();i++){
@@ -165,6 +197,8 @@ public class Colaboradores{
             }
         }
 
+
+        System.out.println("Produção acadêmica de " + colaboradorProcurado.getNome() + "\n");
 
         if(!colaboradorProcurado.publicacoes.isEmpty()){
             System.out.println("Publicações: ");
@@ -197,9 +231,26 @@ public class Colaboradores{
                 }
             }
 
+            
         } else{
-            System.out.println("Esse colaborador não possui publicações");
+            System.out.println("Esse colaborador não possui publicações\n");
+        }
+
+
+        if(!LaboratorioPesquisa.orientacoes.isEmpty()){
+            int j = 1;
+            for(int i = 0;i < LaboratorioPesquisa.orientacoes.size();i++){
+                if(colaboradorProcurado.getNome().equalsIgnoreCase(LaboratorioPesquisa.orientacoes.get(i).getProfessor().getNome()) || colaboradorProcurado.getNome().equalsIgnoreCase(LaboratorioPesquisa.orientacoes.get(i).getAluno().getNome())){
+                    System.out.println("Orientação " + j);
+                    System.out.println("Orientador: " + LaboratorioPesquisa.orientacoes.get(i).getProfessor().nome);
+                    System.out.println("Aluno orientado: " + LaboratorioPesquisa.orientacoes.get(i).getAluno().nome + "\n");
+                    j++;
+                }
+            }
+        } else {
+            System.out.println("Não há orientações.");
         }
     }
+
 
 }
