@@ -1,6 +1,6 @@
-package Project_Software.src;
+package src;
 
-import Project_Software.src.Colaboradores.Colaboradores;
+import src.Colaboradores.Colaboradores;
 import java.util.ArrayList;
 
 
@@ -33,7 +33,7 @@ public class LaboratorioPesquisa {
         System.out.println("Número de projetos concluídos: " + Projetos.getNumeroProjetosConcluido());
         System.out.println("Número total de projetos: " + Projetos.getNumeroProjetos());
         System.out.println("Número de publicações: " + Publicacoes.getNumeroPublicacoes());
-        System.out.println("Número de orientações: " + Orientacoes.getNumeroOrientacoes());
+        System.out.println("Número de orientações: " + Orientacoes.getNumeroOrientacoes() + "\n");
     }
 
     public void setPublicacoes(Publicacoes publicacao) {

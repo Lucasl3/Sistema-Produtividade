@@ -1,9 +1,9 @@
-package Project_Software.src;
+package src;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import Project_Software.src.Colaboradores.Colaboradores;
+import src.Colaboradores.Colaboradores;
 
 public class Publicacoes {
     private String titulo;
@@ -65,7 +65,7 @@ public class Publicacoes {
     }
 
     public Publicacoes dadosPublicacao(LaboratorioPesquisa lab) {
-        System.out.println("Digite o(s) nome(s) do(s) autor(es) dessa publicação. Para finalizar a digitação digite 'sim'.");
+        System.out.println("Digite o(s) nome(s) do(s) autor(es) dessa publicação um por vez. Para finalizar a digitação digite 'sim'.");
         ArrayList<Colaboradores> autores = new ArrayList<Colaboradores>();
 
         

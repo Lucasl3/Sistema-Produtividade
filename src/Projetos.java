@@ -1,12 +1,10 @@
-package Project_Software.src;
+package src;
 
-import Project_Software.src.Colaboradores.Colaboradores;
-import Project_Software.src.Colaboradores.Professores;
+import src.Colaboradores.Colaboradores;
+import src.Colaboradores.Professores;
 
 import java.util.ArrayList;
 import java.util.Scanner;
-
-import Aula.index;
 
 
 public class Projetos {
@@ -289,10 +287,6 @@ public class Projetos {
 
         
         Projetos projeto = projetos.get(indexProjeto);
-        
-        System.out.println("1: " + colaborador.getTipoColaborador());
-        System.out.println("2: " + colaborador.getNumeroProjetosAndamento());
-        System.out.println("3: " + projeto.getStatus());
 
         if(colaborador.getTipoColaborador().equals("Aluno de graduação") && colaborador.getNumeroProjetosAndamento() == 2 && projeto.getStatus().equals("Em andamento")){
             System.out.println("Esse aluno não pode ser alocado a mais um projeto em andamento. Esse aluno só pode participar de 2 projetos em andamento.");
@@ -324,12 +318,14 @@ public class Projetos {
     public static void alterarStatusProjeto() {
         listaProjetos();
 
-        System.out.println("Digite o título do projeto que deseja alterar o status ");
-
-        String tituloProcurado = teclado.nextLine();
+        
+        String tituloProcurado;
         int indexProjeto = -1;
-
+        
         while(indexProjeto == -1){
+            System.out.print("Digite o título do projeto que deseja alterar o status: ");
+            tituloProcurado = teclado.nextLine();
+
             for (int i = 0; i < projetos.size(); i++) {
                 if (projetos.get(i).titulo.equalsIgnoreCase(tituloProcurado)) {
                     indexProjeto = i;

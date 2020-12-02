@@ -1,4 +1,4 @@
-package Project_Software.src.Colaboradores;
+package src.Colaboradores;
 
 public class Pesquisadores extends Colaboradores{
     

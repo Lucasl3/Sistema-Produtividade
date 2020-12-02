@@ -1,9 +1,9 @@
-package Project_Software.src;
+package src;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import Project_Software.src.Colaboradores.Colaboradores;
+import src.Colaboradores.Colaboradores;
 
 public class Orientacoes {
     private Colaboradores professor;

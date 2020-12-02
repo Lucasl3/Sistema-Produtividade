@@ -1,12 +1,12 @@
-package Project_Software.src.Colaboradores;
+package src.Colaboradores;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import Project_Software.src.LaboratorioPesquisa;
-import Project_Software.src.Orientacoes;
-import Project_Software.src.Projetos;
-import Project_Software.src.Publicacoes;
+import src.LaboratorioPesquisa;
+import src.Orientacoes;
+import src.Projetos;
+import src.Publicacoes;
 
 public class Colaboradores{
     private String nome;

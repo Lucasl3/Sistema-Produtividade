@@ -1,9 +1,8 @@
-package Project_Software.src;
+package src;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
-import Project_Software.src.Colaboradores.Colaboradores;
+import src.Colaboradores.Colaboradores;
 public class Administrador {
     public static void main(String[] args) {
         Scanner teclado = new Scanner(System.in);
