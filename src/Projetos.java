@@ -1,7 +1,6 @@
 package src;
 
 import src.Colaboradores.Colaboradores;
-import src.Colaboradores.Professores;
 
 import java.util.ArrayList;
 import java.util.Scanner;

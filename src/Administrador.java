@@ -68,9 +68,7 @@ public class Administrador {
             }
         }
 
-        // laboratorio.todasPublicacoes();
-        // Projetos p = new Projetos();
-        // p.listaDadosProjeto();
+        teclado.close();
 
     }
 }
