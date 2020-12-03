@@ -4,6 +4,8 @@ import src.Colaboradores.Colaboradores;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class Projetos {
@@ -187,6 +189,12 @@ public class Projetos {
         return true;
     }
 
+    public static boolean dataValida(String data){
+        String regex = "^(3[01]|[12][0-9]|0[1-9])/(1[0-2]|0[1-9])/[0-9]{4}$";
+        
+        return data != null && data.matches(regex);
+    }
+
     public static void adicionarProjeto(LaboratorioPesquisa laboratorio) {
         System.out.println("Criação de um projeto:");
 
@@ -201,8 +209,18 @@ public class Projetos {
         System.out.print("Data de início, digite no formato 'dd/mm/yyyy': ");
         String dataInicio = teclado.nextLine();
 
+        while(!dataValida(dataInicio)){
+            System.out.print("Data inválida, digite outra: ");
+            dataInicio = teclado.nextLine();
+        }
+
         System.out.print("Data de término, digite no formato 'dd/mm/yyyy': ");
         String dataTermino = teclado.nextLine();
+
+        while(!dataValida(dataTermino)){
+            System.out.print("Data inválida, digite outra: ");
+            dataTermino = teclado.nextLine();
+        }
 
         System.out.print("Informe a agência financiadora: ");
         String agenciaFinanciadora = teclado.nextLine();
