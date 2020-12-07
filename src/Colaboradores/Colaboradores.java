@@ -119,13 +119,11 @@ public class Colaboradores{
 
         int option = Integer.parseInt(teclado.nextLine());
 
-        LaboratorioPesquisa laboratorio = new LaboratorioPesquisa();
         String tipo;
         switch(option){
             case 1:
                 Alunos aluno = Alunos.escolhaTipoAluno();
                 dadosColaborador(aluno);
-                // laboratorio.adicionarColaborador(aluno);
                 tipo = "Aluno de " + aluno.getTipo();
                 setTipoColaborador(tipo, aluno);
                 Orientacoes.incrementaNumeroAlunos();
